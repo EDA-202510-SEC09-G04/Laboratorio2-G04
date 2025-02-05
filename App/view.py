@@ -27,6 +27,8 @@
 
 import sys
 import App.logic as logic
+import os
+import csv
 
 
 """
@@ -56,8 +58,7 @@ def print_menu():
     print("1- Cargar Libros")
     print("2- Cargar Tags")
     # TODO: Mods de Est-1, Est-2 y Est-3 en el Lab 2
-    # Agregue la opción 3 para cargar los tags de los libros.
-    # Pueede guiarse de las opciones 1 y 2.
+    print("3- Cargar Book-Tags!!!...") 
     print("0- Salir")
 
 
@@ -87,7 +88,7 @@ def load_tags(app):
     return tags
 
 
-def load_books_tags(app):
+def load_books_tags(catalog,filename):
     """
     Función que carga los tags de los libros en la aplicación.
     Carga los tags de los libros desde el archivo book_tags-small.csv y los almacena en la aplicación
@@ -96,7 +97,15 @@ def load_books_tags(app):
     :type app: logic
     """
     # TODO: Mods de Est-1, Est-2 y Est-3 en el Lab 2
-    pass
+    tf = os.path.join(data_dir, filename)
+    input_file = csv.DirectReader(open(tf, encoding="utf-8"))
+    catalog["model"] = create_book_tags_list(catalog["model"])
+
+    for booktag in input_file:
+
+        add_book_tag(catalog,booktag)
+
+    return book_tag_size(catalog)
 
 
 def first_book(app):
@@ -112,7 +121,12 @@ def last_book(app):
     """
     Devuelve el último libro cargado en el conjunto de libros
     """
-    pass
+
+    last = logic.last_book(app)
+
+    return last
+    
+
 
 
 # Se crea el controlador asociado a la vista
@@ -141,7 +155,8 @@ def main():
             first = None
 
             # TODO: Mods de Est-2 en el Lab 2
-            last = None
+            last = last_book(app)
+            print(f'Ultimo libro cargado: \n {str(last)} \n')
 
         elif int(inputs[0]) == 2:
             print("Cargando información de tags....")
@@ -150,7 +165,11 @@ def main():
 
         elif int(inputs[0]) == 3:
             # TODO: Mods de Est-3 en el Lab 2
-            pass
+            print("Cargando información de Book-Tags...") 
+            booktags = load_books_tags(app)
+            print("Total de Book-Tags cargados: " + str(booktags))
+            
+            
 
         elif int(inputs[0]) == 0:
             working = False
